@@ -1,0 +1,204 @@
+openapi: 3.0.0
+info:
+  title: CasC bundle management
+  version: '1.0'
+  description: The CasC bundle management on Operations Center API allows users to view the master paths and tokens for all CasC bundles on an Operations Center. It also allows users to assign master paths and regenerate tokens.
+  contact:
+    name: Heather Cloward
+    email: hcloward@cloudbees.com
+servers:
+  - url: 'http://casc.staging.core.beescloud.com/cjoc'
+paths:
+  /casc-bundle/list:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  bundles:
+                    type: array
+                    uniqueItems: true
+                    minItems: 1
+                    description: List of all bundles available on an Operations Center.
+                    items:
+                      type: object
+                      properties:
+                        linkFileContent:
+                          type: string
+                          minLength: 1
+                          description: 'Contains two entries in string format wrapped in quotes and separated by newline characters: url and token. The url is the the bundle URL where Operations Center exposes its content. The token is the access token for the bundle.'
+                        masterPath:
+                          type: string
+                          minLength: 1
+                          description: The Master Path attribute is the full path of the master item from Operations Center root. Ex. folder1/mm-example-casc.
+                        name:
+                          type: string
+                          minLength: 1
+                          description: The name is the name of the file that contains the CasC bundle. Ex. casc-bundle-java.
+                        url:
+                          type: string
+                          minLength: 1
+                          description: The url is the bundle URL where Operations Center exposes its content.
+                        token:
+                          type: string
+                          minLength: 1
+                          description: The token is the access token for the bundle.
+                      required:
+                        - linkFileContent
+                        - masterPath
+                        - name
+                        - url
+                        - token
+                required:
+                  - bundles
+        '403':
+          description: Not authorized. Administrator permission required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorized-response'
+        '404':
+          description: 'The provided master path, endpoint, or method cannot be found.'
+        '500':
+          description: Internal Server Error.
+      operationId: get-casc-bundle-list
+      description: Lists all of the available CasC bundles on the Operations Center.
+      parameters: []
+  /casc-bundle/regenerate-token:
+    post:
+      summary: ''
+      operationId: post-casc-bundle-regenerate-token
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  linkFileContent:
+                    type: string
+                    minLength: 1
+                    description: 'Contains two entries in string format wrapped in quotes and separated by newline characters: url and token. The url is the the bundle URL where Operations Center exposes its content. The token is the access token for the bundle.'
+                  masterPath:
+                    type: string
+                    minLength: 1
+                    description: The Master Path attribute is the full path of the master item from Operations Center root. Ex. folder1/mm-example-casc.
+                  name:
+                    type: string
+                    minLength: 1
+                    description: The name is the name of the file that contains the CasC bundle. Ex. casc-bundle-java.
+                  url:
+                    type: string
+                    minLength: 1
+                    description: The url is the bundle URL where Operations Center exposes its content.
+                  token:
+                    type: string
+                    minLength: 1
+                    description: The token is the access token for the bundle.
+                required:
+                  - linkFileContent
+                  - masterPath
+                  - name
+                  - url
+                  - token
+              examples:
+                example-1:
+                  value:
+                    linkFileContent: string
+                    masterPath: string
+                    name: string
+                    url: string
+                    token: string
+        '403':
+          description: Not authorized. Administrator permission required.
+        '404':
+          description: 'The provided master path, endpoint, or method cannot be found.'
+        '500':
+          description: Internal Server Error.
+      description: Regenerates the token and returns the new bundle information when successful.
+      parameters:
+        - $ref: '#/components/parameters/bundleId'
+  /casc-bundle/set-master-to-bundle:
+    post:
+      summary: ''
+      operationId: post-casc-bundle-set-master-to-bundle
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  linkFileContent:
+                    type: string
+                    minLength: 1
+                    description: 'Contains two entries in string format wrapped in quotes and separated by newline characters: url and token. The url is the the bundle URL where Operations Center exposes its content. The token is the access token for the bundle.'
+                  masterPath:
+                    type: string
+                    minLength: 1
+                    description: The Master Path attribute is the full path of the master item from Operations Center root. Ex. folder1/mm-example-casc.
+                  name:
+                    type: string
+                    minLength: 1
+                    description: The name is the name of the file that contains the CasC bundle. Ex. casc-bundle-java.
+                  url:
+                    type: string
+                    minLength: 1
+                    description: The url is the bundle URL where Operations Center exposes its content.
+                  token:
+                    type: string
+                    minLength: 1
+                    description: The token is the access token for the bundle.
+                required:
+                  - linkFileContent
+                  - masterPath
+                  - name
+                  - url
+                  - token
+        '403':
+          description: Not authorized. Administrator permission required.
+        '404':
+          description: 'The provided master path, endpoint, or method cannot be found.'
+        '500':
+          description: Internal Server Error.
+      description: Assigns a new master path and returns the new bundle information when successful.
+      parameters:
+        - $ref: '#/components/parameters/bundleId'
+        - schema:
+            type: string
+          in: query
+          name: masterPath
+          description: The Master Path attribute is the relative path of the master item in Operations Center. Ex. folder1/mm-example-casc.
+          required: true
+components:
+  schemas:
+    unauthorized-response:
+      title: unauthorized-response
+      type: object
+      description: ''
+      properties:
+        cod:
+          type: integer
+        message:
+          type: string
+      required:
+        - cod
+        - message
+  parameters:
+    bundleId:
+      name: bundleId
+      in: query
+      description: The bundle id is the name of the file that contains the CasC bundle. Ex. casc-bundle-java.
+      schema:
+        type: string
