@@ -4,10 +4,11 @@ info:
   version: '1.0'
   description: The CasC bundle management on Operations Center API allows users to view the master paths and tokens for all CasC bundles on an Operations Center. It also allows users to assign master paths and regenerate tokens.
   contact:
-    name: Heather Cloward
-    email: hcloward@cloudbees.com
+    name: CloudBees support
+    url: 'https://support.cloudbees.com'
+  termsOfService: 'https://www.cloudbees.com/r/supportpolicies'
 servers:
-  - url: 'http://casc.staging.core.beescloud.com/cjoc'
+  - url: 'http://{my-operations-center.com}/cjoc'
 paths:
   /casc-bundle/list:
     get:
@@ -202,3 +203,9 @@ components:
       description: The bundle id is the name of the file that contains the CasC bundle. Ex. casc-bundle-java.
       schema:
         type: string
+  securitySchemes:
+    'username:{api-token}':
+      type: http
+      scheme: basic
+security:
+  - API Key - 1: []
