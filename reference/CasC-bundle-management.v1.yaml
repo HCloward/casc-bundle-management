@@ -12,7 +12,7 @@ servers:
 paths:
   /casc-bundle/list:
     get:
-      summary: Your GET endpoint
+      summary: List available CasC bundles
       tags: []
       responses:
         '200':
@@ -74,7 +74,7 @@ paths:
       parameters: []
   /casc-bundle/regenerate-token:
     post:
-      summary: ''
+      summary: Regenerate CasC token
       operationId: post-casc-bundle-regenerate-token
       responses:
         '200':
@@ -130,7 +130,7 @@ paths:
         - $ref: '#/components/parameters/bundleId'
   /casc-bundle/set-master-to-bundle:
     post:
-      summary: ''
+      summary: Set CasC Master Path
       operationId: post-casc-bundle-set-master-to-bundle
       responses:
         '200':
